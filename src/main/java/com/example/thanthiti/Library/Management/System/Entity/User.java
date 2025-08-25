@@ -1,5 +1,6 @@
 package com.example.thanthiti.Library.Management.System.Entity;
 
+
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -17,19 +18,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.USER;
-
-    public enum Role {
-        USER,
-        ADMIN
-    }
-
-    // 1 User -> Many Loan
+    // 1 User สามารถมีหลาย Loan
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Loan> loans;
 
@@ -43,18 +32,6 @@ public class User extends BaseEntity {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
-
-//    implement get/set Createat, UpdateAt, DeleteAt from BaseEntity
-
-
     public List<Loan> getLoans() { return loans; }
     public void setLoans(List<Loan> loans) { this.loans = loans; }
 }
-
-
-
