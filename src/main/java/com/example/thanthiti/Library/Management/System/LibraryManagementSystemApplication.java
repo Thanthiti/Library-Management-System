@@ -5,7 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LibraryManagementSystemApplication {
+public class
+LibraryManagementSystemApplication {
     public static void main(String[] args) {
     Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
@@ -14,6 +15,10 @@ public class LibraryManagementSystemApplication {
     System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
     System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
     System.setProperty("JWT_SECRET_BASE64", dotenv.get("JWT_SECRET_BASE64", "defaultDevSecret"));
+
+    System.setProperty("ADMIN_EMAIL", dotenv.get("ADMIN_EMAIL"));
+    System.setProperty("ADMIN_PASSWORD", dotenv.get("ADMIN_PASSWORD"));
+    System.setProperty("ADMIN_NAME", dotenv.get("ADMIN_NAME"));
 
     SpringApplication.run(LibraryManagementSystemApplication.class, args);
 

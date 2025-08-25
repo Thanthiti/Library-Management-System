@@ -46,8 +46,8 @@ public class User extends BaseEntity {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
     public List<Loan> getLoans() { return loans; }
     public void setLoans(List<Loan> loans) { this.loans = loans; }
