@@ -4,11 +4,14 @@ import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginRequ
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRequestDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserResponseDTO;
+
 import com.example.thanthiti.Library.Management.System.Service.UserService;
+import org.springframework.security.core.Authentication;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,4 +32,12 @@ public class UserCTRL {
         UserLoginResponseDTO userResponseDTO= userService.LoginUser(userRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO );
       }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> profile(Authentication authentication) {
+        String email = authentication.getName();
+        String role = authentication.getAuthorities().toString();
+        return ResponseEntity.ok("Hello " + email + " with role " + role);
+    }
+
 }

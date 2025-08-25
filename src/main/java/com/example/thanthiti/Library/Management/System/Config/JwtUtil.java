@@ -1,5 +1,6 @@
 package com.example.thanthiti.Library.Management.System.Config;
 
+import com.example.thanthiti.Library.Management.System.Entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,30 +9,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.time.Duration;
 import java.util.Date;
 import java.util.UUID;
 
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")                  // Base64-encoded secret (no default!)
+    @Value("${jwt.secret}")
     private String jwtSecretB64;
 
-    @Value("${jwt.expiration:3600000}")     // 1h by default; override in prod
+    @Value("${jwt.expiration:3600000}")
     private long jwtExpirationInMs;
 
-    @Value("${jwt.issuer:library-management-system}")     // set real issuer
+    @Value("${jwt.issuer:library-management-system}")
     private String issuer;
 
-    @Value("${jwt.audience:library-users}") // set real audience
+    @Value("${jwt.audience:library-users}")
     private String audience;
 
-    @Value("${jwt.clockSkewSeconds:60}")    // tolerance for clock drift
+    @Value("${jwt.clockSkewSeconds:60}")
     private long clockSkewSeconds;
 
     private SecretKey signingKey;
-    private JwtParser jwtParser; // cached, thread-safe after build
+    private JwtParser jwtParser;
 
     @PostConstruct
     void init() {
@@ -49,64 +49,52 @@ public class JwtUtil {
                 .build();
     }
 
-    // Generate Token
-    public String generateToken(String email) {
+    // ------------------ Generate Token ------------------
+    public String generateToken(String email, User.Role role) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                //.setHeaderParam("kid", "v1") // enable if you do key rotation
-                .setId(UUID.randomUUID().toString()) // jti
+                .setId(UUID.randomUUID().toString())
                 .setIssuer(issuer)
                 .setAudience(audience)
                 .setSubject(email)
+                .claim("role", role.name())
                 .setIssuedAt(now)
                 .setNotBefore(now)
                 .setExpiration(expiry)
-                // .claim("roles", List.of("USER")) // add your roles/claims here
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Extract Email from Token
-    public String getEmailFromToken(String token) {
-        return jwtParser.parseClaimsJws(stripBearer(token))
-                .getBody()
-                .getSubject();
+    // ------------------ Extract Email ------------------
+    public String getEmailFromToken(String authorizationHeader) {
+        return parseClaims(authorizationHeader).getSubject();
     }
 
-    // Validate Token: signature + structure + iss/aud + exp/nbf
-    public boolean validateToken(String token) {
+    // ------------------ Extract Role ------------------
+    public User.Role getRoleFromToken(String authorizationHeader) {
+        Claims claims = parseClaims(authorizationHeader);
+        String roleStr = claims.get("role", String.class);
+        if (roleStr == null) return User.Role.USER; // default
+        return User.Role.valueOf(roleStr);
+    }
+
+    // ------------------ Validate Token ------------------
+    public boolean validateToken(String authorizationHeader) {
         try {
-            jwtParser.parseClaimsJws(stripBearer(token));
+            parseClaims(authorizationHeader);
             return true;
-        } catch (ExpiredJwtException e) {
-            // log.warn("JWT expired", e);
-            return false;
-        } catch (UnsupportedJwtException e) {
-            // log.warn("JWT unsupported", e);
-            return false;
-        } catch (MalformedJwtException e) {
-            // log.warn("JWT malformed", e);
-            return false;
-        } catch (SecurityException e) { // includes SignatureException
-            // log.warn("JWT signature invalid", e);
-            return false;
-        } catch (IllegalArgumentException e) {
-            // log.warn("JWT illegal argument", e);
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    // Check if token is expired (after basic verification)
-    public boolean isTokenExpired(String token) {
-        try {
-            Claims claims = jwtParser.parseClaimsJws(stripBearer(token)).getBody();
-            return claims.getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            return true; // treat invalid parse as expired/invalid
-        }
+    // ------------------ Private Helpers ------------------
+    private Claims parseClaims(String authorizationHeader) {
+        String token = stripBearer(authorizationHeader);
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 
     private String stripBearer(String token) {
@@ -115,6 +103,6 @@ public class JwtUtil {
         if (t.regionMatches(true, 0, "Bearer ", 0, 7)) {
             return t.substring(7).trim();
         }
-        return t;
+        throw new IllegalArgumentException("Token must be prefixed with 'Bearer '");
     }
 }

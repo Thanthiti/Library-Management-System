@@ -69,7 +69,7 @@ public class UserService {
         }
 
         // Generate a simple token (in a real application, use JWT or similar)
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
 
         UserLoginResponseDTO responseDTO = new UserLoginResponseDTO();
         responseDTO.setId(user.getId());
