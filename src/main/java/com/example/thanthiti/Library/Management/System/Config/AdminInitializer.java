@@ -35,7 +35,7 @@ public class AdminInitializer implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
         if (userRepository.findByEmail(adminEmail).isEmpty()) {
-            var admin = new com.example.thanthiti.Library.Management.System.Entity.User();
+            var admin = new User();
             admin.setName(adminName);
             admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode(adminPassword));
