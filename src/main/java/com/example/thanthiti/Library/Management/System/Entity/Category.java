@@ -14,9 +14,19 @@ public class Category extends BaseEntity{
     @Column(nullable = false, unique = true)
     private String name;
 
+    // Constructors
+    public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
+
     // 1 Category มีหลาย Book
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Book> books;
+    
+
 
     // Getters & Setters
     public Long getId() { return id; }
