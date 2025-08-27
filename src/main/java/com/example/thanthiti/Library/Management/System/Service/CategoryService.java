@@ -1,0 +1,53 @@
+package com.example.thanthiti.Library.Management.System.Service;
+
+import com.example.thanthiti.Library.Management.System.DTO.BookDTO.BookResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.CategoryDTO.CategoryAdminResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.CategoryDTO.CategoryUserResponseDTO;
+import com.example.thanthiti.Library.Management.System.Entity.Category;
+import com.example.thanthiti.Library.Management.System.Repository.CategoryRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CategoryService {
+        private final CategoryRepository categoryRepository;
+        public CategoryService(CategoryRepository categoryRepository) {
+            this.categoryRepository = categoryRepository;
+        }
+
+    public CategoryAdminResponseDTO getAdminCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id " + id));
+
+        CategoryAdminResponseDTO categoryResponseDTO = new CategoryAdminResponseDTO();
+        categoryResponseDTO.setName(category.getName());
+        categoryResponseDTO.setBookCount(category.getBooks().size());
+
+        List<BookResponseDTO> bookResponseDTOs = category.getBooks().stream()
+                .map(book -> {
+                    BookResponseDTO bookResponseDTO = new BookResponseDTO();
+                    bookResponseDTO.setTitle(book.getTitle());
+                    bookResponseDTO.setAuthor(book.getAuthor());
+                    bookResponseDTO.setDescription(book.getDescription());
+                    return bookResponseDTO;
+                    })
+                    .toList();
+
+        categoryResponseDTO.setBooks(bookResponseDTOs);
+
+        return categoryResponseDTO;
+    }
+    public CategoryUserResponseDTO getUserCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id " + id));
+
+        CategoryUserResponseDTO categoryResponseDTO = new CategoryUserResponseDTO();
+        categoryResponseDTO.setName(category.getName());
+        categoryResponseDTO.setBookCount(category.getBooks().size());
+
+
+        return categoryResponseDTO;
+    }
+
+}
