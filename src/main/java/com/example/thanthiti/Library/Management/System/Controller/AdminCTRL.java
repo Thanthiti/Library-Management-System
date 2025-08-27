@@ -19,7 +19,7 @@ public class AdminCTRL {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/users")
+    @GetMapping("admin/users")
     public ResponseEntity<List<AdminResponseDTO>> getAllUsers() {
         List<AdminResponseDTO> adminResponseDTO = adminService.getAllUsers();
         return ResponseEntity.ok(adminResponseDTO);

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    @Autowired
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil ;

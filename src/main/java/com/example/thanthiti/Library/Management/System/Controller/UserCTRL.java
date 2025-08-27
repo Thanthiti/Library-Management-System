@@ -1,6 +1,5 @@
 package com.example.thanthiti.Library.Management.System.Controller;
 
-import com.example.thanthiti.Library.Management.System.DTO.AdminDTO.AdminResponseDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginRequestDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRequestDTO;
@@ -8,7 +7,6 @@ import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserResponseD
 
 import com.example.thanthiti.Library.Management.System.Service.AdminService;
 import com.example.thanthiti.Library.Management.System.Service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
