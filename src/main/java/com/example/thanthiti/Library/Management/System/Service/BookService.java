@@ -66,4 +66,36 @@ public class BookService {
         return bookAdminResponseDTO;
     }
 
+    public BookAdminResponseDTO updateBook(long id, BookAdminRequestDTO bookAdminRequestDTO){
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + id));
+        book.setTitle(bookAdminRequestDTO.getTitle());
+        book.setAuthor(bookAdminRequestDTO.getAuthor());
+        book.setDescription(bookAdminRequestDTO.getDescription());
+
+        // set category
+        Category category = categoryRepository.findById(bookAdminRequestDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        book.setCategory(category);
+        Book saved = bookRepository.save(book);
+        BookAdminResponseDTO bookAdminResponseDTO = new BookAdminResponseDTO();
+        bookAdminResponseDTO.setId(saved.getId());
+        bookAdminResponseDTO.setTitle(saved.getTitle());
+        bookAdminResponseDTO.setAuthor(saved.getAuthor());
+        bookAdminResponseDTO.setDescription(saved.getDescription());
+        bookAdminResponseDTO.setCategoryName(category.getName());
+        return bookAdminResponseDTO;
+    }
+
+//    Hard Delete Book
+    public BookAdminResponseDTO deleteBook(long id){
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + id));
+        bookRepository.delete(book);
+        BookAdminResponseDTO bookAdminResponseDTO = new BookAdminResponseDTO();
+        bookAdminResponseDTO.setId(book.getId());
+        bookAdminResponseDTO.setTitle(book.getTitle());
+        bookAdminResponseDTO.setAuthor(book.getAuthor());
+        bookAdminResponseDTO.setDescription(book.getDescription());
+        return bookAdminResponseDTO;
+    }
+
 }

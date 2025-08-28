@@ -3,6 +3,7 @@ package com.example.thanthiti.Library.Management.System.Controller;
 import com.example.thanthiti.Library.Management.System.DTO.BookDTO.BookAdminRequestDTO;
 import com.example.thanthiti.Library.Management.System.DTO.BookDTO.BookAdminResponseDTO;
 import com.example.thanthiti.Library.Management.System.DTO.BookDTO.BookResponseDTO;
+
 import com.example.thanthiti.Library.Management.System.Repository.BookRepository;
 import com.example.thanthiti.Library.Management.System.Service.BookService;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class BookCTRL {
@@ -44,6 +46,29 @@ public class BookCTRL {
         BookAdminResponseDTO bookAdminResponseDTO = bookService.addBook(bookAdminRequestDTO);
         return ResponseEntity.status(201).body(bookAdminResponseDTO);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("admin/books/{id}")
+    public ResponseEntity<BookAdminResponseDTO> updateBook(@PathVariable Long id,@RequestBody BookAdminRequestDTO bookAdminRequestDTO) {
+        BookAdminResponseDTO updatedBook = bookService.updateBook(id, bookAdminRequestDTO);
+        return ResponseEntity.ok(updatedBook);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("admin/books/{id}")
+    public ResponseEntity<BookAdminResponseDTO> deleteBook(@PathVariable Long id) {
+        BookAdminResponseDTO deletedBook = bookService.deleteBook(id);
+        return ResponseEntity.ok(deletedBook);
+    }
+
+
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PatchMapping("/admin/delete/books/{id}/")
+//    public ResponseEntity<BookAdminResponseDTO> deleteBook(@PathVariable Long id, Map<String, Object> updates ) {
+//        BookResponseDTO updatedBook = bookService.pdateBookPartial(id, updates);
+//        return ResponseEntity.ok(updatedBook);
+//
+//    }
 
 
 }
