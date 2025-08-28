@@ -21,8 +21,12 @@ public class Loan extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false, foreignKey = @ForeignKey(name = "fk_loan_book"))
     private Book book;
 
+    @Column(nullable = false)
     private LocalDate loanDate;
     private LocalDate returnDate;
+
+    @Column(nullable = false)
+    private boolean returned = false;
 
     // Getters & Setters
     public Long getId() { return id; }
@@ -39,4 +43,7 @@ public class Loan extends BaseEntity {
 
     public LocalDate getReturnDate() { return returnDate; }
     public void setReturnDate(LocalDate returnDate) { this.returnDate = returnDate; }
+
+    public boolean isReturned() { return returned; }
+    public void setReturned(boolean returned) { this.returned = returned; }
 }
