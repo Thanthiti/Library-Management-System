@@ -41,5 +41,17 @@ public class GlobalException {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntime(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    public static class CategoryAlreadyExistsException extends RuntimeException {
+        public CategoryAlreadyExistsException(String message) {
+            super(message);
+        }
+    }
 
 }
