@@ -1,6 +1,6 @@
 package com.example.thanthiti.Library.Management.System.DTO.LoanDTO;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class LoanResponseDTO {
@@ -8,9 +8,13 @@ public class LoanResponseDTO {
     private Long id;
     private Long bookId;
     private Long userId;
-    private LocalDateTime loanDate;
-    private LocalDateTime returnDate;
+    private LocalDate loanDate;
+    private LocalDate returnDate;
     private boolean returned;
+    private String bookName;
+    private String userName;
+    private String message;
+
 
     public LoanResponseDTO() {
 
@@ -35,20 +39,43 @@ public class LoanResponseDTO {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    public LocalDateTime getLoanDate() {
+    public LocalDate getLoanDate() {
         return loanDate;
     }
-    public void setLoanDate(LocalDateTime loanDate) {
+    public void setLoanDate(LocalDate loanDate) {
         this.loanDate = loanDate;
     }
-    public LocalDateTime getReturnDate() {
+    public LocalDate getReturnDate() {
         return returnDate;
     }
-    public void setReturnDate(LocalDateTime returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
     public boolean isReturned() {
         return returned;
     }
+    public void setReturned(boolean returned) {
+        this.returned = returned;
+    }
+
+    public void setBookName(String bookName){
+        this.bookName = bookName;
+    }
+    public String getBookName() {
+        return bookName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public String getUserName() {
+        return userName;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public String getMessage() {
+        return message;
+    }
+
 
 }
