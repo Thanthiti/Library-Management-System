@@ -24,6 +24,4 @@ public class AdminCTRL {
         List<AdminResponseDTO> adminResponseDTO = adminService.getAllUsers();
         return ResponseEntity.ok(adminResponseDTO);
     }
-
-
 }
