@@ -2,8 +2,8 @@ package com.example.thanthiti.Library.Management.System.Controller;
 
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginRequestDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRequestDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterRequestDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterResponseDTO;
 
 import com.example.thanthiti.Library.Management.System.Service.AdminService;
 import com.example.thanthiti.Library.Management.System.Service.UserService;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class UserCTRL {
     @Autowired
@@ -29,8 +27,8 @@ public class UserCTRL {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> RegisterUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO userResponseDTO = userService.RegisterUser(userRequestDTO);
+    public ResponseEntity<UserRegisterResponseDTO> RegisterUser(@Valid @RequestBody UserRegisterRequestDTO userRequestDTO) {
+        UserRegisterResponseDTO userResponseDTO = userService.RegisterUser(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
 
@@ -46,11 +44,5 @@ public class UserCTRL {
         String role = authentication.getAuthorities().toString();
         return ResponseEntity.ok("Hello " + email + " with role " + role);
     }
-
-
-
-
-
-
 
 }

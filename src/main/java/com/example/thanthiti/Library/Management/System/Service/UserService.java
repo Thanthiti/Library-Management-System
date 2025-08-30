@@ -4,13 +4,13 @@ import com.example.thanthiti.Library.Management.System.Config.JwtUtil;
 
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginRequestDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRequestDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterRequestDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterResponseDTO;
 
 import com.example.thanthiti.Library.Management.System.Entity.User;
+import com.example.thanthiti.Library.Management.System.Mapper.UserMapper;
 import com.example.thanthiti.Library.Management.System.Repository.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 //    Service to handle user registration
-    public UserResponseDTO RegisterUser(UserRequestDTO userRequestDTO) {
+    public UserRegisterResponseDTO RegisterUser(UserRegisterRequestDTO userRequestDTO) {
         // Logic to register a new user
         User user = new User();
         user.setName(userRequestDTO.getName());
@@ -36,7 +36,6 @@ public class UserService {
             throw new IllegalArgumentException("Email already in use");
         }
         user.setEmail(userRequestDTO.getEmail());
-
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
         if (userRequestDTO.getRole() == null || userRequestDTO.getRole().isBlank()) {
@@ -48,15 +47,7 @@ public class UserService {
         user.setCreatedAt(java.time.LocalDateTime.now());
         user = userRepository.save(user);
 
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userResponseDTO.setId(user.getId());
-        userResponseDTO.setName(user.getName());
-        userResponseDTO.setEmail(user.getEmail());
-        userResponseDTO.setRole(user.getRole().toString());
-        userResponseDTO.setCreateAt(user.getCreatedAt().toString());
-        userResponseDTO.setUpdateAt(user.getUpdatedAt() != null ? user.getUpdatedAt().toString() : null);
-        userResponseDTO.setDeleteAt(user.getDeletedAt() != null ? user.getDeletedAt().toString() : null);
-        return userResponseDTO;
+        return UserMapper.toRegisterUserResponseDTO(user);
     }
 
     public UserLoginResponseDTO LoginUser(UserLoginRequestDTO loginRequestDTO) {
@@ -71,13 +62,6 @@ public class UserService {
         // Generate a simple token (in a real application, use JWT or similar)
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
 
-        UserLoginResponseDTO responseDTO = new UserLoginResponseDTO();
-        responseDTO.setId(user.getId());
-        responseDTO.setName(user.getName());
-        responseDTO.setEmail(user.getEmail());
-        responseDTO.setRole(user.getRole().toString());
-        responseDTO.setToken(token);
-
-        return responseDTO;
+        return UserMapper.toLoginResponseDTO(user, token);
     }
 }
