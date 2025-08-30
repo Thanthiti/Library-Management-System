@@ -28,6 +28,23 @@ public class Loan extends BaseEntity {
     @Column(nullable = false)
     private boolean returned = false;
 
+    protected Loan(){}
+
+    public static Loan createNewLoan(User user, Book book){
+        Loan loan = new Loan();
+        loan.setUser(user);
+        loan.setBook(book);
+        loan.setLoanDate(LocalDate.now());
+        loan.setReturned(false);
+        return loan;
+    }
+
+    public void returnBook(){
+        this.returned = true;
+        this.returnDate = LocalDate.now();
+    }
+
+
     // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

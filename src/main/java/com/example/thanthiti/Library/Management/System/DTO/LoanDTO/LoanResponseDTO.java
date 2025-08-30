@@ -1,13 +1,13 @@
 package com.example.thanthiti.Library.Management.System.DTO.LoanDTO;
 
-import java.time.LocalDate;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.time.LocalDate;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoanResponseDTO {
 
-    private Long id;
-    private Long bookId;
-    private Long userId;
+
     private LocalDate loanDate;
     private LocalDate returnDate;
     private boolean returned;
@@ -20,25 +20,27 @@ public class LoanResponseDTO {
 
     }
 
+    public LoanResponseDTO(String userName,String bookName,LocalDate loanDate,LocalDate returnDate,boolean returned){
+        this.userName = userName;
+        this.bookName = bookName;
+        this.loanDate = loanDate;
+        this.returnDate = returnDate;
+        this.returned = returned;
+    }
+
+    public LoanResponseDTO(String userName,String bookName,LocalDate loanDate,LocalDate returnDate,boolean returned,String message){
+        this.userName = userName;
+        this.bookName = bookName;
+        this.loanDate = loanDate;
+        this.returnDate = returnDate;
+        this.returned = returned;
+        this.message = message;
+    }
+
+
+
 //    get/set method
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Long getBookId() {
-        return bookId;
-    }
-    public void setBookId(Long bookId) {
-        this.bookId = bookId;
-    }
-    public Long getUserId() {
-        return userId;
-    }
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+
     public LocalDate getLoanDate() {
         return loanDate;
     }
