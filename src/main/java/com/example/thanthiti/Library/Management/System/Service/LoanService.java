@@ -28,8 +28,8 @@ public class LoanService {
     }
 
     public LoanResponseDTO createLoan(LoanRequestDTO loanRequestDTO, Authentication authentication) {
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email)
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Book book = bookRepository.findById(loanRequestDTO.getBookId())
@@ -46,8 +46,8 @@ public class LoanService {
     }
 
     public LoanResponseDTO returnLoan(Long bookId, Authentication authentication) {
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
 
@@ -59,8 +59,8 @@ public class LoanService {
     }
 
     public List<LoanResponseDTO> getMyLoan(Authentication authentication) {
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Loan> loans = loanRepository.findByUserId(user.getId());
         if (loans.isEmpty()) {
