@@ -73,6 +73,12 @@ public class JwtUtil {
         return parseClaims(authorizationHeader).getSubject();
     }
 
+    public Long getUserIdFromToken(String token) {
+        token = token.replace("Bearer ", "");
+        Claims claims = extractAllClaims(token);
+        return claims.get("userId", Long.class);
+    }
+
     // ------------------ Extract Role ------------------
     public User.Role getRoleFromToken(String authorizationHeader) {
         Claims claims = parseClaims(authorizationHeader);
@@ -105,4 +111,9 @@ public class JwtUtil {
         }
         throw new IllegalArgumentException("Token must be prefixed with 'Bearer '");
     }
+
+    private Claims extractAllClaims(String token) {
+        return jwtParser.parseClaimsJws(token).getBody();
+    }
 }
+

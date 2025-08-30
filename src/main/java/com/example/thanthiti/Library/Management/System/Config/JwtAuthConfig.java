@@ -36,6 +36,7 @@ public class JwtAuthConfig extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             try {
+                Long userId = jwtUtil.getUserIdFromToken(authHeader);
                 String email = jwtUtil.getEmailFromToken(authHeader);
                 User.Role role = jwtUtil.getRoleFromToken(authHeader);
 
@@ -46,7 +47,7 @@ public class JwtAuthConfig extends OncePerRequestFilter {
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                email, null, authorities
+                                userId, null, authorities
                         );
 
                 authentication.setDetails(
