@@ -9,11 +9,6 @@ public class PostCategoryAdminResDTO {
     public PostCategoryAdminResDTO() {
     }
 
-    public PostCategoryAdminResDTO(String name, String message) {
-        this.message = message;
-        this.name = name;
-    }
-
     public PostCategoryAdminResDTO(Long id, String name, String message) {
         this.id = id;
         this.name = name;
