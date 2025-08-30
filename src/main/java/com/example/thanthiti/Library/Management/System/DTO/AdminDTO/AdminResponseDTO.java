@@ -1,8 +1,10 @@
 package com.example.thanthiti.Library.Management.System.DTO.AdminDTO;
 
-public class AdminResponseDTO {
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-        //    id ,name,email,password,role,createAt,update,delete
+public class AdminResponseDTO  {
+
         private Long id;
         private String name;
         private String email;
@@ -11,7 +13,7 @@ public class AdminResponseDTO {
         private String updateAt;
         private String deleteAt;
 
-        public AdminResponseDTO() {
+        public AdminResponseDTO()  {
         }
 
         public Long getId() {
@@ -22,30 +24,17 @@ public class AdminResponseDTO {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
-        }
+        public String getName(){ return name;}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+        public void setName(String name){ this.name = name;}
 
-        public String getEmail() {
-            return email;
-        }
+        public String getEmail(){ return email;}
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
+        public void setEmail(String email){ this.email = email;}
 
+        public String getRole(){ return role;}
 
-        public String getRole() {
-            return role;
-        }
-
-        public void setRole(String role) {
-            this.role = role;
-        }
+        public void setRole(String role){ this.role = role;}
 
         public String getCreateAt() {
             return createAt;

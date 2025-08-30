@@ -1,13 +1,11 @@
 package com.example.thanthiti.Library.Management.System.DTO.UserDTO;
 
-public class UserLoginResponseDTO {
-//    Login Response : id, name, email, role, token
+public class UserRegisterResponseDTO {
     private String name;
     private String email;
     private String role;
-    private String token;
 
-    public UserLoginResponseDTO() {
+    public UserRegisterResponseDTO() {
     }
 
     public String getName() {
@@ -34,11 +32,4 @@ public class UserLoginResponseDTO {
         this.role = role;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

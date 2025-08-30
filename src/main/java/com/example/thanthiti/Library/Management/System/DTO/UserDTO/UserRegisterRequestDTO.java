@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class UserRequestDTO {
+public class UserRegisterRequestDTO {
 
     @NotBlank(message =  "Name is required")
     private String name;
@@ -19,7 +19,7 @@ public class UserRequestDTO {
 
     private String role; // user or admin
 
-    public UserRequestDTO() {
+    public UserRegisterRequestDTO() {
     }
 
     public String getName() {
