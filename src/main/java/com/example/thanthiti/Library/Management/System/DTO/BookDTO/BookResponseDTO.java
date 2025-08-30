@@ -1,10 +1,19 @@
 package com.example.thanthiti.Library.Management.System.DTO.BookDTO;
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookResponseDTO {
     private String title;
     private String author;
     private String description;
     public BookResponseDTO() {
+    }
+    public BookResponseDTO(String title, String author, String description) {
+        this.title = title;
+        this.author = author;
+        this.description = description;
     }
 
     public String getTitle() {return title;}
