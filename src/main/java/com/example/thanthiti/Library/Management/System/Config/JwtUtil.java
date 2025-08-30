@@ -50,7 +50,7 @@ public class JwtUtil {
     }
 
     // ------------------ Generate Token ------------------
-    public String generateToken(String email, User.Role role) {
+    public String generateToken(Long userId, String email, User.Role role) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtExpirationInMs);
 
@@ -60,6 +60,7 @@ public class JwtUtil {
                 .setIssuer(issuer)
                 .setAudience(audience)
                 .setSubject(email)
+                .claim("userId", userId)
                 .claim("role", role.name())
                 .setIssuedAt(now)
                 .setNotBefore(now)
@@ -67,6 +68,7 @@ public class JwtUtil {
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     // ------------------ Extract Email ------------------
     public String getEmailFromToken(String authorizationHeader) {
