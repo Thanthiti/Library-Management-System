@@ -6,6 +6,7 @@ import com.example.thanthiti.Library.Management.System.DTO.BookDTO.BookResponseD
 import com.example.thanthiti.Library.Management.System.Entity.Book;
 import com.example.thanthiti.Library.Management.System.Entity.Category;
 import com.example.thanthiti.Library.Management.System.Exeption.ResourceNotFoundException;
+import com.example.thanthiti.Library.Management.System.Mapper.BookMapper;
 import com.example.thanthiti.Library.Management.System.Repository.BookRepository;
 import com.example.thanthiti.Library.Management.System.Repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -25,77 +26,46 @@ public class BookService {
     public List<BookResponseDTO> getAllBooks() {
         // Logic to get all books
         return bookRepository.findAll().stream()
-                .map(book -> {
-                    BookResponseDTO bookResponseDTO = new BookResponseDTO();
-                    bookResponseDTO.setTitle(book.getTitle());
-                    bookResponseDTO.setAuthor(book.getAuthor());
-                    bookResponseDTO.setDescription(book.getDescription());
-                    return bookResponseDTO;
-                })
+                .map(BookMapper::toBookResponseDTO)
                 .toList();
     }
 
     public BookResponseDTO getBookById(Long id) {
         // Logic to get book by id
         return bookRepository.findById(id)
-                .map(book -> {
-                    BookResponseDTO bookResponseDTO = new BookResponseDTO();
-                    bookResponseDTO.setTitle(book.getTitle());
-                    bookResponseDTO.setAuthor(book.getAuthor());
-                    bookResponseDTO.setDescription(book.getDescription());
-                    return bookResponseDTO;
-                })
+                .map(BookMapper::toBookResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + id));
     }
 
     public BookAdminResponseDTO addBook(BookAdminRequestDTO bookAdminRequestDTO){
         Category category = categoryRepository.findById(bookAdminRequestDTO.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
-        Book book = new Book();
-        book.setTitle(bookAdminRequestDTO.getTitle());
-        book.setAuthor(bookAdminRequestDTO.getAuthor());
-        book.setDescription(bookAdminRequestDTO.getDescription());
+        Book book = BookMapper.toBook(bookAdminRequestDTO);
         book.setCategory(category);
-        bookRepository.save(book);
-        BookAdminResponseDTO bookAdminResponseDTO = new BookAdminResponseDTO();
-        bookAdminResponseDTO.setId(book.getId());
-        bookAdminResponseDTO.setTitle(book.getTitle());
-        bookAdminResponseDTO.setAuthor(book.getAuthor());
-        bookAdminResponseDTO.setDescription(book.getDescription());
-        bookAdminResponseDTO.setCategoryName(category.getName());
-        return bookAdminResponseDTO;
+        Book saved = bookRepository.save(book);
+        return BookMapper.toBookAdminResponseDTO(saved);
     }
 
     public BookAdminResponseDTO updateBook(long id, BookAdminRequestDTO bookAdminRequestDTO){
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + id));
-        book.setTitle(bookAdminRequestDTO.getTitle());
-        book.setAuthor(bookAdminRequestDTO.getAuthor());
-        book.setDescription(bookAdminRequestDTO.getDescription());
 
+        Book updateBook = BookMapper.toBook(bookAdminRequestDTO);
         // set category
         Category category = categoryRepository.findById(bookAdminRequestDTO.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
-        book.setCategory(category);
+        updateBook.setCategory(category);
+
         Book saved = bookRepository.save(book);
-        BookAdminResponseDTO bookAdminResponseDTO = new BookAdminResponseDTO();
-        bookAdminResponseDTO.setId(saved.getId());
-        bookAdminResponseDTO.setTitle(saved.getTitle());
-        bookAdminResponseDTO.setAuthor(saved.getAuthor());
-        bookAdminResponseDTO.setDescription(saved.getDescription());
-        bookAdminResponseDTO.setCategoryName(category.getName());
-        return bookAdminResponseDTO;
+
+        return BookMapper.toBookAdminResponseDTO(saved);
     }
 
 //    Hard Delete Book
     public BookAdminResponseDTO deleteBook(long id){
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + id));
+
         bookRepository.delete(book);
-        BookAdminResponseDTO bookAdminResponseDTO = new BookAdminResponseDTO();
-        bookAdminResponseDTO.setId(book.getId());
-        bookAdminResponseDTO.setTitle(book.getTitle());
-        bookAdminResponseDTO.setAuthor(book.getAuthor());
-        bookAdminResponseDTO.setDescription(book.getDescription());
-        return bookAdminResponseDTO;
+        return BookMapper.toBookAdminResponseDTO(book);
     }
 
 }

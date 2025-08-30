@@ -1,5 +1,9 @@
 package com.example.thanthiti.Library.Management.System.DTO.BookDTO;
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookAdminResponseDTO {
     private Long id;
     private String title;
@@ -30,7 +34,6 @@ public class BookAdminResponseDTO {
     public String getCategoryName() {
         return categoryName;
     }
-
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
