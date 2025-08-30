@@ -3,6 +3,8 @@ package com.example.thanthiti.Library.Management.System.Mapper;
 import com.example.thanthiti.Library.Management.System.DTO.AdminDTO.AdminResponseDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
 import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserUpdateResDTO;
 import com.example.thanthiti.Library.Management.System.Entity.User;
 
 public class UserMapper
@@ -35,6 +37,27 @@ public class UserMapper
         dto.setCreateAt(user.getCreatedAt().toString());
         dto.setUpdateAt(user.getUpdatedAt() != null ? user.getUpdatedAt().toString() : null);
         dto.setDeleteAt(user.getDeletedAt() != null ? user.getDeletedAt().toString() : null);
+        return dto;
+    }
+
+    public static UserResponseDTO toUserResponseDTO(User user) {
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole().toString());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setUpdatedAt(user.getUpdatedAt());
+        return dto;
+    }
+
+    public static UserUpdateResDTO toUserUpdateResDTO(User user, String message) {
+        UserUpdateResDTO dto = new UserUpdateResDTO();
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole().toString());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setUpdatedAt(user.getUpdatedAt());
+        dto.setMessage(message);
         return dto;
     }
 

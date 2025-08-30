@@ -2,15 +2,13 @@ package com.example.thanthiti.Library.Management.System.Service;
 
 import com.example.thanthiti.Library.Management.System.Config.JwtUtil;
 
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginRequestDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserLoginResponseDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterRequestDTO;
-import com.example.thanthiti.Library.Management.System.DTO.UserDTO.UserRegisterResponseDTO;
+import com.example.thanthiti.Library.Management.System.DTO.UserDTO.*;
 
 import com.example.thanthiti.Library.Management.System.Entity.User;
 import com.example.thanthiti.Library.Management.System.Mapper.UserMapper;
 import com.example.thanthiti.Library.Management.System.Repository.UserRepository;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,8 +58,54 @@ public class UserService {
         }
 
         // Generate a simple token (in a real application, use JWT or similar)
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
 
         return UserMapper.toLoginResponseDTO(user, token);
+    }
+
+    public UserResponseDTO getUserProfile(Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return UserMapper.toUserResponseDTO(user);
+    }
+
+    public UserUpdateResDTO updateUser(Authentication authentication,UserUpdateReqDTO requestDTO) {
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Update Name
+        if(requestDTO.getName() != null && !requestDTO.getName().isBlank()) {
+            user.setName(requestDTO.getName());
+        }
+
+        // Update Email
+        if(requestDTO.getEmail() != null && !requestDTO.getEmail().isBlank()) {
+            if(userRepository.findByEmail(requestDTO.getEmail())
+                    .filter(u -> !u.getId().equals(user.getId()))
+                    .isPresent()) {
+                throw new RuntimeException("Email already in use");
+            }
+            user.setEmail(requestDTO.getEmail());
+        }
+
+        // Update Password
+        if(requestDTO.getOldPassword() != null && requestDTO.getNewPassword() != null) {
+            if(!passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword())) {
+                throw new RuntimeException("Old password incorrect");
+            }
+            user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
+        }
+
+        User updatedUser = userRepository.save(user);
+        return UserMapper.toUserUpdateResDTO(updatedUser,"User updated successfully");
+    }
+
+    public void deleteUser(Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
     }
 }
